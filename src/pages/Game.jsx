@@ -16,11 +16,18 @@ const Game = () => {
 
       // Store the dimensions in state variables
       setElementWidth(width);
-      setElementHeight(windowHeight);
+      setElementHeight(windowHeight * (83.8 / 100) * 0.9 - 60);
+      
     }
   }, []);
 
-  console.log("w:", elementWidth, "h:", elementHeight)
+  console.log("w:", elementWidth, "h:", elementHeight);
+
+  const getRandomNumber = () => {
+    return Math.floor(Math.random() * (elementHeight + 1));
+  };
+
+  console.log("Random Y:", getRandomNumber());
 
   return (
     <div className="h-full text-white">
@@ -54,11 +61,21 @@ const Game = () => {
       </section>
 
       {/* The Game  */}
-      <section ref={elementRef} className="">
+      <section ref={elementRef} className="relative">
         <motion.div
-          className="bg-green-500 w-[200px] h-[60px] flex items-center"
-          animate={{ y: 727, x:0 }}
-          // transition={{ type: "tween", duration: 6 }}
+          className="bg-green-300 w-[200px] flex items-center"
+          animate={{ y: getRandomNumber(), x: elementWidth }}
+          initial={{ x: -200 }} // Use the random initial Y position
+          transition={{ type: "tween", duration: 10, y: { duration: 0 } }}
+        >
+          <p className="text-2xl">Kelime</p>
+        </motion.div>
+
+        <motion.div
+          className="bg-green-300 w-[200px] flex items-center"
+          animate={{ y: getRandomNumber(), x: elementWidth }}
+          initial={{ x: -200 }} // Use the random initial Y position
+          transition={{ type: "tween", duration: 10, y: { duration: 0 } }}
         >
           <p className="text-2xl">Kelime</p>
         </motion.div>
