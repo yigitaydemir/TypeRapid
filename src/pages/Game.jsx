@@ -6,6 +6,7 @@ const Game = () => {
   const [health, setHealth] = useState(5);
   const [elementWidth, setElementWidth] = useState(null);
   const [elementHeight, setElementHeight] = useState(null);
+  const [words, setWords] = useState();
 
   useEffect(() => {
     // Check if the element ref is available
@@ -17,9 +18,16 @@ const Game = () => {
       // Store the dimensions in state variables
       setElementWidth(width);
       setElementHeight(windowHeight * (83.8 / 100) * 0.9 - 60);
-      
     }
+
+    fetch(
+      "https://random-word-api.herokuapp.com/word?number=10&length=5&lang=en"
+    )
+      .then((response) => response.json())
+      .then((result) => setWords(result));
   }, []);
+
+  console.log("words:", words);
 
   console.log("w:", elementWidth, "h:", elementHeight);
 
@@ -61,24 +69,28 @@ const Game = () => {
       </section>
 
       {/* The Game  */}
-      <section ref={elementRef} className="relative">
-        <motion.div
-          className="bg-green-300 w-[200px] flex items-center"
-          animate={{ y: getRandomNumber(), x: elementWidth }}
-          initial={{ x: -200 }} // Use the random initial Y position
-          transition={{ type: "tween", duration: 10, y: { duration: 0 } }}
-        >
-          <p className="text-2xl">Kelime</p>
-        </motion.div>
-
-        <motion.div
-          className="bg-green-300 w-[200px] flex items-center"
-          animate={{ y: getRandomNumber(), x: elementWidth }}
-          initial={{ x: -200 }} // Use the random initial Y position
-          transition={{ type: "tween", duration: 10, y: { duration: 0 } }}
-        >
-          <p className="text-2xl">Kelime</p>
-        </motion.div>
+      <section className="game-section">
+        <div className="mask"></div>
+        <div ref={elementRef} className="relative">
+          {words?.map((word) => (
+            <motion.div
+              className=" w-[200px] flex items-center"
+              animate={{ y: getRandomNumber(), x: elementWidth }}
+              initial={{ x: -100 }} // Use the random initial Y position
+              transition={{ type: "tween", duration: 10, y: { duration: 0 } }}
+            >
+              <p className="text-2xl">{word}</p>
+            </motion.div>
+          ))}
+          {/* <motion.div
+            className=" w-[200px] flex items-center"
+            animate={{ y: getRandomNumber(), x: elementWidth }}
+            initial={{ x: -200 }} // Use the random initial Y position
+            transition={{ type: "tween", duration: 10, y: { duration: 0 } }}
+          >
+            <p className="text-2xl">Kelime</p>
+          </motion.div> */}
+        </div>
       </section>
     </div>
   );

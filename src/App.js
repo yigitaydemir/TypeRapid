@@ -7,7 +7,7 @@ import { Routes, Route } from "react-router-dom"
 
 const App = () => {
   return (
-    <div className="bg-slate-300 h-[100vh] flex justify-center items-center">
+    <div className="bg-slate-300 h-[100vh] flex justify-center items-center overflow-hidden">
       <div className="bg-[url('./media/bg.gif')] bg-no-repeat bg-center bg-cover h-5/6 w-11/12 max-w-screen-xl rounded-xl shadow-2xl">
         <Routes>
           <Route path="/" element={<Home></Home>}></Route>
