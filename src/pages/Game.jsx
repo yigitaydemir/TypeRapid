@@ -3,39 +3,50 @@ import { motion } from "framer-motion";
 
 const Game = () => {
   const elementRef = useRef(null);
-  const [health, setHealth] = useState(5);
   const [elementWidth, setElementWidth] = useState(null);
   const [elementHeight, setElementHeight] = useState(null);
-  const [words, setWords] = useState();
+
+  const [words, setWords] = useState([]);
+
+  const [health, setHealth] = useState(5);
+  const [letters, setLetters] = useState(5);
+
+  const [game, setGame] = useState(true);
+
+  const [userInput, setUserInput] = useState("");
 
   useEffect(() => {
-    // Check if the element ref is available
     if (elementRef.current) {
-      // Get the element's dimensions
       const width = elementRef.current.offsetWidth;
       const windowHeight = window.innerHeight;
 
-      // Store the dimensions in state variables
       setElementWidth(width);
       setElementHeight(windowHeight * (83.8 / 100) * 0.9 - 60);
     }
 
     fetch(
-      "https://random-word-api.herokuapp.com/word?number=10&length=5&lang=en"
+      `https://random-word-api.herokuapp.com/word?number=1&length=5&lang=en`
     )
       .then((response) => response.json())
       .then((result) => setWords(result));
   }, []);
 
-  console.log("words:", words);
-
-  console.log("w:", elementWidth, "h:", elementHeight);
-
   const getRandomNumber = () => {
     return Math.floor(Math.random() * (elementHeight + 1));
   };
 
-  console.log("Random Y:", getRandomNumber());
+  const handleTyping = (e) => {
+    setUserInput(e.target.value)
+    console.log(userInput)
+  }
+
+  // const handleHealth = () => {
+  //   if (health === 0) {
+  //     setGame(false);
+  //   } else {
+  //     setHealth(health - 1);
+  //   }
+  // };
 
   return (
     <div className="h-full text-white">
@@ -72,24 +83,40 @@ const Game = () => {
       <section className="game-section">
         <div className="mask"></div>
         <div ref={elementRef} className="relative">
-          {words?.map((word) => (
-            <motion.div
-              className=" w-[200px] flex items-center"
-              animate={{ y: getRandomNumber(), x: elementWidth }}
-              initial={{ x: -100 }} // Use the random initial Y position
-              transition={{ type: "tween", duration: 10, y: { duration: 0 } }}
-            >
-              <p className="text-2xl">{word}</p>
-            </motion.div>
-          ))}
-          {/* <motion.div
-            className=" w-[200px] flex items-center"
-            animate={{ y: getRandomNumber(), x: elementWidth }}
-            initial={{ x: -200 }} // Use the random initial Y position
-            transition={{ type: "tween", duration: 10, y: { duration: 0 } }}
-          >
-            <p className="text-2xl">Kelime</p>
-          </motion.div> */}
+          {/* users input */}
+          <div className="text-center text-2xl">
+            <form>
+              {/* <label>TypeRapid:</label> */}
+              <input
+                type="text"
+                className="bg-transparent outline-none text-center max-w-[250px]"
+                autoFocus
+                onChange={handleTyping}
+              />
+            </form>
+          </div>
+          {game ? (
+            words?.map((word, index) => (
+              <motion.div
+                key={index}
+                className=" w-[200px] flex items-center"
+                animate={{ y: getRandomNumber(), x: elementWidth }}
+                initial={{ x: -100 }}
+                transition={{
+                  type: "tween",
+                  duration: 10,
+                  y: { duration: 0 },
+                }}
+              >
+                <p className="text-2xl">{word}</p>
+              </motion.div>
+            ))
+          ) : (
+            <div className="w-full p-20">
+              <h1 className="text-center text-6xl">Game Over</h1>
+              <p className=" text-center text-3xl">Try Again</p>
+            </div>
+          )}
         </div>
       </section>
     </div>

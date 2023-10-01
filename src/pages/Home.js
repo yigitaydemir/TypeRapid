@@ -18,7 +18,7 @@ const Home = () => {
         </p>
         <Link to="/play">
           <button className="text-white text-xl font-semibold bg-red-400 w-44 h-12 rounded-md m-2 tracking-wider">
-            Start
+            Play
           </button>
         </Link>
         <Link to="/about">
