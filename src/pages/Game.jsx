@@ -11,10 +11,13 @@ const Game = () => {
   const [health, setHealth] = useState(5);
   const [letters, setLetters] = useState(5);
   const [score, setScore] = useState(0);
+  const [delay, setDelay] = useState(5000);
 
   const [game, setGame] = useState(true);
 
   const [userInput, setUserInput] = useState("");
+
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     if (elementRef.current) {
@@ -43,6 +46,16 @@ const Game = () => {
 
     console.log(words);
   }, [letters, elementHeight]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (currentIndex < words.length) {
+        setCurrentIndex(currentIndex + 1);
+      }
+    }, delay);
+
+    return () => clearTimeout(timer);
+  }, [currentIndex, words]);
 
   const getRandomNumber = () => {
     return Math.floor(Math.random() * (elementHeight + 1));
@@ -101,7 +114,7 @@ const Game = () => {
             </form>
           </div>
           {game ? (
-            words?.map((word, index) => (
+            words?.slice(0, currentIndex).map((word, index) => (
               <motion.div
                 key={index}
                 className=" w-[200px] flex items-center"
