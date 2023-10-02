@@ -10,6 +10,7 @@ const Game = () => {
 
   const [health, setHealth] = useState(5);
   const [letters, setLetters] = useState(5);
+  const [score, setScore] = useState(0);
 
   const [game, setGame] = useState(true);
 
@@ -21,32 +22,36 @@ const Game = () => {
       const windowHeight = window.innerHeight;
 
       setElementWidth(width);
-      setElementHeight(windowHeight * (83.8 / 100) * 0.9 - 60);
+      setElementHeight(windowHeight * (83.8 / 100) * 0.9 - 120);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (elementHeight !== null) {
+      fetch(
+        `https://random-word-api.herokuapp.com/word?number=10&length=${letters}&lang=en`
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          const wordsPair = result.map((word) => ({
+            word,
+            positionY: getRandomNumber(),
+          }));
+          setWords(wordsPair);
+        });
     }
 
-    fetch(
-      `https://random-word-api.herokuapp.com/word?number=1&length=5&lang=en`
-    )
-      .then((response) => response.json())
-      .then((result) => setWords(result));
-  }, []);
+    console.log(words);
+  }, [letters, elementHeight]);
 
   const getRandomNumber = () => {
     return Math.floor(Math.random() * (elementHeight + 1));
   };
 
   const handleTyping = (e) => {
-    setUserInput(e.target.value)
-    console.log(userInput)
-  }
-
-  // const handleHealth = () => {
-  //   if (health === 0) {
-  //     setGame(false);
-  //   } else {
-  //     setHealth(health - 1);
-  //   }
-  // };
+    setUserInput(e.target.value);
+    console.log(userInput);
+  };
 
   return (
     <div className="h-full text-white">
@@ -75,7 +80,7 @@ const Game = () => {
 
         <div className="flex items-center gap-2">
           <p>Score:</p>
-          <p>00001</p>
+          <p>{score}</p>
         </div>
       </section>
 
@@ -100,7 +105,7 @@ const Game = () => {
               <motion.div
                 key={index}
                 className=" w-[200px] flex items-center"
-                animate={{ y: getRandomNumber(), x: elementWidth }}
+                animate={{ y: word.positionY, x: elementWidth }}
                 initial={{ x: -100 }}
                 transition={{
                   type: "tween",
@@ -108,7 +113,7 @@ const Game = () => {
                   y: { duration: 0 },
                 }}
               >
-                <p className="text-2xl">{word}</p>
+                <p className="text-2xl">{word.word}</p>
               </motion.div>
             ))
           ) : (
