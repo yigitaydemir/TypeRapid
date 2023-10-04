@@ -9,8 +9,6 @@ const Game = () => {
   const [words, setWords] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const [currentWordIndex, setCurrentWordIndex] = useState(0);
-
   const [health, setHealth] = useState(5);
   const [letters, setLetters] = useState(5);
   const [score, setScore] = useState(0);
@@ -40,7 +38,7 @@ const Game = () => {
           const wordsPair = result.map((word) => ({
             word,
             positionY: getRandomNumber(),
-            failed: false
+            failed: false,
           }));
           setWords(wordsPair);
         });
@@ -68,33 +66,15 @@ const Game = () => {
     console.log(userInput);
   };
 
-  const handleFail = (word, index) => {
-    // if (health > 0) {
-    //   setHealth(health - 1);
-    // } else {
-    //   setGame(false);
-    // }
-    // console.log("inital health state:", health)
-    // if (index === currentWordIndex) { // Check if this is the current word
-    //   if (health > 0) {
-    //     setHealth(health - 1);
-    //     console.log("decreased health state:", health)
-    //   } else {
-    //     setGame(false);
-    //     console.log("final health state:", health)
-    //   }
-    //   setCurrentWordIndex(index + 1); // Move to the next word
-    // }
-
+  const handleFail = () => {
     setHealth((prevHealth) => {
-      if (index === currentWordIndex && prevHealth > 0) {
-        setCurrentWordIndex(index + 1); // Move to the next word
+      if (prevHealth > 0) {
         return prevHealth - 1;
       } else {
         return prevHealth;
       }
     });
-  
+
     if (health <= 1) {
       setGame(false);
     }
@@ -163,7 +143,7 @@ const Game = () => {
                   duration: 10,
                   y: { duration: 0 },
                 }}
-                onAnimationComplete={() => handleFail(word, index)}
+                onAnimationComplete={handleFail}
               >
                 <p className="text-2xl">{word.word}</p>
               </motion.div>
