@@ -7,6 +7,9 @@ const Game = () => {
   const [elementHeight, setElementHeight] = useState(null);
 
   const [words, setWords] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
 
   const [health, setHealth] = useState(5);
   const [letters, setLetters] = useState(5);
@@ -16,8 +19,6 @@ const Game = () => {
   const [game, setGame] = useState(true);
 
   const [userInput, setUserInput] = useState("");
-
-  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     if (elementRef.current) {
@@ -39,6 +40,7 @@ const Game = () => {
           const wordsPair = result.map((word) => ({
             word,
             positionY: getRandomNumber(),
+            failed: false
           }));
           setWords(wordsPair);
         });
@@ -64,6 +66,42 @@ const Game = () => {
   const handleTyping = (e) => {
     setUserInput(e.target.value);
     console.log(userInput);
+  };
+
+  const handleFail = (word, index) => {
+    // if (health > 0) {
+    //   setHealth(health - 1);
+    // } else {
+    //   setGame(false);
+    // }
+    // console.log("inital health state:", health)
+    // if (index === currentWordIndex) { // Check if this is the current word
+    //   if (health > 0) {
+    //     setHealth(health - 1);
+    //     console.log("decreased health state:", health)
+    //   } else {
+    //     setGame(false);
+    //     console.log("final health state:", health)
+    //   }
+    //   setCurrentWordIndex(index + 1); // Move to the next word
+    // }
+
+    setHealth((prevHealth) => {
+      if (index === currentWordIndex && prevHealth > 0) {
+        setCurrentWordIndex(index + 1); // Move to the next word
+        return prevHealth - 1;
+      } else {
+        return prevHealth;
+      }
+    });
+  
+    if (health <= 1) {
+      setGame(false);
+    }
+  };
+
+  const tryAgain = () => {
+    setGame(true);
   };
 
   return (
@@ -104,12 +142,12 @@ const Game = () => {
           {/* users input */}
           <div className="text-center text-2xl">
             <form>
-              {/* <label>TypeRapid:</label> */}
               <input
                 type="text"
                 className="bg-transparent outline-none text-center max-w-[250px]"
                 autoFocus
                 onChange={handleTyping}
+                disabled={game ? false : true}
               />
             </form>
           </div>
@@ -125,14 +163,20 @@ const Game = () => {
                   duration: 10,
                   y: { duration: 0 },
                 }}
+                onAnimationComplete={() => handleFail(word, index)}
               >
                 <p className="text-2xl">{word.word}</p>
               </motion.div>
             ))
           ) : (
-            <div className="w-full p-20">
+            <div className="w-full p-20 flex flex-col items-center">
               <h1 className="text-center text-6xl">Game Over</h1>
-              <p className=" text-center text-3xl">Try Again</p>
+              <button
+                className="text-white text-3xl bg-red-400 w-44 h-12 rounded-md m-2 tracking-wider"
+                onClick={tryAgain}
+              >
+                Try Again
+              </button>
             </div>
           )}
         </div>
