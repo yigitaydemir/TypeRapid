@@ -7,7 +7,9 @@ const Game = () => {
   const [elementHeight, setElementHeight] = useState(null);
 
   const [words, setWords] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(1);
+
+  const [wordsList, setWordsList] = useState([]);
 
   const [health, setHealth] = useState(5);
   const [letters, setLetters] = useState(5);
@@ -24,7 +26,7 @@ const Game = () => {
       const windowHeight = window.innerHeight;
 
       setElementWidth(width);
-      setElementHeight(windowHeight * (83.8 / 100) * 0.9 - 120);
+      setElementHeight(windowHeight * (83.8 / 100) * 0.9 - 100);
     }
   }, []);
 
@@ -38,13 +40,14 @@ const Game = () => {
           const wordsPair = result.map((word) => ({
             word,
             positionY: getRandomNumber(),
-            failed: false,
           }));
           setWords(wordsPair);
+          setWordsList(result);
         });
     }
 
-    console.log(words);
+    //console.log(words);
+    console.log("wordsList", wordsList);
   }, [letters, elementHeight]);
 
   useEffect(() => {
@@ -62,8 +65,24 @@ const Game = () => {
   };
 
   const handleTyping = (e) => {
-    setUserInput(e.target.value);
-    console.log(userInput);
+    const inputText = e.target.value.toLowerCase().slice(-letters);
+    setUserInput(inputText);
+    console.log("input:", inputText);
+  
+    if (wordsList.includes(inputText)) {
+      console.log("success");
+      handleSuccess();
+  
+      // Create a new array without the matched word
+      const updatedWordsList = wordsList.filter((word) => word !== inputText);
+      setWordsList(updatedWordsList);
+  
+      e.target.value = "";
+    }
+  };
+
+  const handleSuccess = () => {
+    setScore(score + 5);
   };
 
   const handleFail = () => {
@@ -82,6 +101,9 @@ const Game = () => {
 
   const tryAgain = () => {
     setGame(true);
+    setHealth(5);
+    setScore(0);
+    setCurrentIndex(1);
   };
 
   return (
@@ -141,6 +163,7 @@ const Game = () => {
                 transition={{
                   type: "tween",
                   duration: 10,
+                  ease: "linear",
                   y: { duration: 0 },
                 }}
                 onAnimationComplete={handleFail}
