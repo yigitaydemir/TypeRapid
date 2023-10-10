@@ -10,6 +10,7 @@ const Game = () => {
   const [currentIndex, setCurrentIndex] = useState(1);
 
   const [wordsList, setWordsList] = useState([]);
+  const [wordCount, setWordCount] = useState(0)
 
   const [health, setHealth] = useState(5);
   const [letters, setLetters] = useState(5);
@@ -68,21 +69,18 @@ const Game = () => {
     const inputText = e.target.value.toLowerCase().slice(-letters);
     setUserInput(inputText);
     console.log("input:", inputText);
-  
+
     if (wordsList.includes(inputText)) {
-      console.log("success");
-      handleSuccess();
-  
-      // Create a new array without the matched word
       const updatedWordsList = wordsList.filter((word) => word !== inputText);
       setWordsList(updatedWordsList);
-  
       e.target.value = "";
     }
   };
 
   const handleSuccess = () => {
-    setScore(score + 5);
+    setScore((prevScore) => {
+      return prevScore + 5;
+    });
   };
 
   const handleFail = () => {
@@ -158,7 +156,11 @@ const Game = () => {
               <motion.div
                 key={index}
                 className=" w-[200px] flex items-center"
-                animate={{ y: word.positionY, x: elementWidth }}
+                animate={
+                  wordsList.includes(word.word)
+                    ? { y: word.positionY, x: elementWidth }
+                    : { opacity: 0, y: word.positionY, x: elementWidth, transition: 0 }
+                }
                 initial={{ x: -100 }}
                 transition={{
                   type: "tween",
@@ -166,7 +168,9 @@ const Game = () => {
                   ease: "linear",
                   y: { duration: 0 },
                 }}
-                onAnimationComplete={handleFail}
+                onAnimationComplete={
+                  wordsList.includes(word.word) ? handleFail : handleSuccess
+                }
               >
                 <p className="text-2xl">{word.word}</p>
               </motion.div>
