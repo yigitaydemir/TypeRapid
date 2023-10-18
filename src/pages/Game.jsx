@@ -10,7 +10,6 @@ const Game = () => {
   const [currentIndex, setCurrentIndex] = useState(1);
 
   const [wordsList, setWordsList] = useState([]);
-  const [wordCount, setWordCount] = useState(0)
 
   const [health, setHealth] = useState(5);
   const [letters, setLetters] = useState(5);
@@ -27,7 +26,7 @@ const Game = () => {
       const windowHeight = window.innerHeight;
 
       setElementWidth(width);
-      setElementHeight(windowHeight * (83.8 / 100) * 0.9 - 100);
+      setElementHeight(windowHeight * (83.333333 / 100) * 0.9 - 100);
     }
   }, []);
 
@@ -43,18 +42,19 @@ const Game = () => {
             positionY: getRandomNumber(),
           }));
           setWords(wordsPair);
-          setWordsList(result);
+          setWordsList((prevWordsList) => [...prevWordsList, ...result]);
         });
     }
-
-    //console.log(words);
-    console.log("wordsList", wordsList);
   }, [letters, elementHeight]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       if (currentIndex < words.length) {
         setCurrentIndex(currentIndex + 1);
+      } //ek
+      else if (currentIndex === 10) {
+        setLetters(letters + 1)
+        setCurrentIndex(1)
       }
     }, delay);
 
@@ -81,6 +81,7 @@ const Game = () => {
     setScore((prevScore) => {
       return prevScore + 5;
     });
+
   };
 
   const handleFail = () => {
@@ -102,7 +103,10 @@ const Game = () => {
     setHealth(5);
     setScore(0);
     setCurrentIndex(1);
+    setLetters(5)
   };
+
+  console.log("current index:", currentIndex)
 
   return (
     <div className="h-full text-white">
@@ -159,7 +163,12 @@ const Game = () => {
                 animate={
                   wordsList.includes(word.word)
                     ? { y: word.positionY, x: elementWidth }
-                    : { opacity: 0, y: word.positionY, x: elementWidth, transition: 0 }
+                    : {
+                        opacity: 0,
+                        y: word.positionY,
+                        x: elementWidth,
+                        transition: 1,
+                      }
                 }
                 initial={{ x: -100 }}
                 transition={{
