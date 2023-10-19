@@ -27,6 +27,8 @@ const Game = () => {
 
       setElementWidth(width);
       setElementHeight(windowHeight * (83.333333 / 100) * 0.9 - 100);
+
+      console.log("window height:", elementHeight)
     }
   }, []);
 
@@ -44,6 +46,9 @@ const Game = () => {
           setWords(wordsPair);
           setWordsList((prevWordsList) => [...prevWordsList, ...result]);
         });
+
+        console.log(wordsList)
+        console.log(words)
     }
   }, [letters, elementHeight]);
 
@@ -51,10 +56,13 @@ const Game = () => {
     const timer = setTimeout(() => {
       if (currentIndex < words.length) {
         setCurrentIndex(currentIndex + 1);
-      } //ek
+      }
       else if (currentIndex === 10) {
         setLetters(letters + 1)
-        setCurrentIndex(1)
+        setCurrentIndex(0)
+        if (delay > 1000) {
+          setDelay(delay - 500)
+        }
       }
     }, delay);
 
@@ -104,9 +112,8 @@ const Game = () => {
     setScore(0);
     setCurrentIndex(1);
     setLetters(5)
+    setWordsList([])
   };
-
-  console.log("current index:", currentIndex)
 
   return (
     <div className="h-full text-white">
@@ -159,7 +166,7 @@ const Game = () => {
             words?.slice(0, currentIndex).map((word, index) => (
               <motion.div
                 key={index}
-                className=" w-[200px] flex items-center"
+                className=" w-[200px] flex items-center m-0 p-0"
                 animate={
                   wordsList.includes(word.word)
                     ? { y: word.positionY, x: elementWidth }
