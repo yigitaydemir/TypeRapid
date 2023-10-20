@@ -1,5 +1,15 @@
 import { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import {
+  arrayRemove,
+  arrayUnion,
+  doc,
+  setDoc,
+  updateDoc,
+  getDoc,
+} from "firebase/firestore";
+import { db } from "../utils/Firebase";
 
 const Game = () => {
   const elementRef = useRef(null);
@@ -16,6 +26,7 @@ const Game = () => {
   const [letters, setLetters] = useState(5);
   const [score, setScore] = useState(0);
   const [delay, setDelay] = useState(5000);
+  const [duration, setDuration] = useState(10);
 
   const [game, setGame] = useState(true);
 
@@ -27,7 +38,7 @@ const Game = () => {
       const windowHeight = window.innerHeight;
 
       setElementWidth(width);
-      setElementHeight(windowHeight * (83.333333 / 100) * 0.9 - 100);
+      setElementHeight(windowHeight * (5 / 6) * 0.9 - 300);
 
       console.log("window height:", elementHeight);
     }
@@ -59,6 +70,9 @@ const Game = () => {
         setCurrentIndex(currentIndex + 1);
       } else if (currentIndex === 10) {
         setLetters(letters + 1);
+        if (duration < 5) {
+          setDuration(duration - 1);
+        }
         setCurrentIndex(0);
         if (delay > 1000) {
           setDelay(delay - 500);
@@ -126,6 +140,12 @@ const Game = () => {
     e.preventDefault();
   };
 
+  const saveScore = (e) => {
+    const leaderboardRef = doc(db, "Leaderboard", "Leaderboard");
+    setDoc(leaderboardRef, { capital: true }, { merge: true });
+    e.preventDefault();
+  };
+
   return (
     <div className="h-full text-white">
       {/* Healthbar and Score */}
@@ -158,7 +178,7 @@ const Game = () => {
       </section>
 
       {/* The Game  */}
-      <section className="game-section">
+      <section className="game-section h-[90%]">
         {game && <div className="overlay" onClick={handleOverlayClick} />}
         <div className="mask"></div>
         <div ref={elementRef} className="relative">
@@ -193,7 +213,7 @@ const Game = () => {
                 initial={{ x: -100 }}
                 transition={{
                   type: "tween",
-                  duration: 10,
+                  duration: duration,
                   ease: "linear",
                   y: { duration: 0 },
                 }}
@@ -207,12 +227,34 @@ const Game = () => {
           ) : (
             <div className="w-full p-20 flex flex-col items-center">
               <h1 className="text-center text-6xl">Game Over</h1>
+
+              <form>
+                <label className="text-2xl">Player Name:</label>
+                <input
+                  type="text"
+                  className="text-2xl bg-transparent outline-none border-b-white border-b-2"
+                />
+              </form>
+
+              <button
+                className="text-white text-xl bg-red-400 w-44 h-12 rounded-md m-2 tracking-wider"
+                //onClick={tryAgain}
+              >
+                Save Your Score
+              </button>
               <button
                 className="text-white text-3xl bg-red-400 w-44 h-12 rounded-md m-2 tracking-wider"
                 onClick={tryAgain}
               >
                 Try Again
               </button>
+
+              <Link to="/leaderboard">
+                {" "}
+                <button className="text-white text-xl font-semibold bg-red-400 w-44 h-12 rounded-md m-2 tracking-wider">
+                  Leaderboard
+                </button>
+              </Link>
             </div>
           )}
         </div>
