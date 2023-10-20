@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 
 const Game = () => {
   const elementRef = useRef(null);
+  const inputRef = useRef(null);
   const [elementWidth, setElementWidth] = useState(null);
   const [elementHeight, setElementHeight] = useState(null);
 
@@ -28,7 +29,7 @@ const Game = () => {
       setElementWidth(width);
       setElementHeight(windowHeight * (83.333333 / 100) * 0.9 - 100);
 
-      console.log("window height:", elementHeight)
+      console.log("window height:", elementHeight);
     }
   }, []);
 
@@ -47,27 +48,32 @@ const Game = () => {
           setWordsList((prevWordsList) => [...prevWordsList, ...result]);
         });
 
-        console.log(wordsList)
-        console.log(words)
+      console.log(wordsList);
+      console.log(words);
     }
-  }, [letters, elementHeight]);
+  }, [letters, elementHeight, game]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       if (currentIndex < words.length) {
         setCurrentIndex(currentIndex + 1);
-      }
-      else if (currentIndex === 10) {
-        setLetters(letters + 1)
-        setCurrentIndex(0)
+      } else if (currentIndex === 10) {
+        setLetters(letters + 1);
+        setCurrentIndex(0);
         if (delay > 1000) {
-          setDelay(delay - 500)
+          setDelay(delay - 500);
         }
       }
     }, delay);
 
     return () => clearTimeout(timer);
   }, [currentIndex, words]);
+
+  const handleOverlayClick = () => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  };
 
   const getRandomNumber = () => {
     return Math.floor(Math.random() * (elementHeight + 1));
@@ -89,7 +95,6 @@ const Game = () => {
     setScore((prevScore) => {
       return prevScore + 5;
     });
-
   };
 
   const handleFail = () => {
@@ -107,12 +112,18 @@ const Game = () => {
   };
 
   const tryAgain = () => {
-    setGame(true);
     setHealth(5);
     setScore(0);
     setCurrentIndex(1);
-    setLetters(5)
-    setWordsList([])
+    setLetters(5);
+    setWordsList([]);
+    setWords([]);
+    setDelay(5000);
+    setGame(true);
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
   };
 
   return (
@@ -148,12 +159,14 @@ const Game = () => {
 
       {/* The Game  */}
       <section className="game-section">
+        {game && <div className="overlay" onClick={handleOverlayClick} />}
         <div className="mask"></div>
         <div ref={elementRef} className="relative">
           {/* users input */}
           <div className="text-center text-2xl">
-            <form>
+            <form onSubmit={handleFormSubmit}>
               <input
+                ref={inputRef}
                 type="text"
                 className="bg-transparent outline-none text-center max-w-[250px]"
                 autoFocus
