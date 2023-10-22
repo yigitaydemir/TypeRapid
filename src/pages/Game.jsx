@@ -25,12 +25,13 @@ const Game = () => {
   const [health, setHealth] = useState(5);
   const [letters, setLetters] = useState(5);
   const [score, setScore] = useState(0);
-  const [delay, setDelay] = useState(5000);
-  const [duration, setDuration] = useState(10);
+  const [delay, setDelay] = useState(1000);
+  const [duration, setDuration] = useState(5);
 
   const [game, setGame] = useState(true);
 
   const [userInput, setUserInput] = useState("");
+  const [playerName, setPlayerName] = useState("");
 
   useEffect(() => {
     if (elementRef.current) {
@@ -59,7 +60,6 @@ const Game = () => {
           setWordsList((prevWordsList) => [...prevWordsList, ...result]);
         });
 
-      console.log(wordsList);
       console.log(words);
     }
   }, [letters, elementHeight, game]);
@@ -140,10 +140,19 @@ const Game = () => {
     e.preventDefault();
   };
 
-  const saveScore = (e) => {
+  const saveScore = async (e) => {
     const leaderboardRef = doc(db, "Leaderboard", "Leaderboard");
     setDoc(leaderboardRef, { capital: true }, { merge: true });
+
+    await updateDoc(leaderboardRef, {
+      Score: score,
+      playerName: playerName
+    });
     e.preventDefault();
+  };
+
+  const handleName = (e) => {
+    setPlayerName(e.target.value);
   };
 
   return (
@@ -231,6 +240,7 @@ const Game = () => {
               <form>
                 <label className="text-2xl">Player Name:</label>
                 <input
+                  onChange={handleName}
                   type="text"
                   className="text-2xl bg-transparent outline-none border-b-white border-b-2"
                 />
@@ -238,7 +248,7 @@ const Game = () => {
 
               <button
                 className="text-white text-xl bg-red-400 w-44 h-12 rounded-md m-2 tracking-wider"
-                //onClick={tryAgain}
+                onClick={saveScore}
               >
                 Save Your Score
               </button>
