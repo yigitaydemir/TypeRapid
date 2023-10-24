@@ -141,9 +141,18 @@ const Game = () => {
     const leaderboardRef = doc(db, "Leaderboard", "Leaderboard");
     setDoc(leaderboardRef, { capital: true }, { merge: true });
 
+    // const docData = {
+    //   Scores: {
+    //     playerName: playerName,
+    //     score: score,
+    //   }
+    // }
+
     await updateDoc(leaderboardRef, {
-      Score: score,
-      playerName: playerName,
+      Leaderboard: arrayUnion({
+        playerName: playerName,
+        score: score
+      })
     });
     e.preventDefault();
   };
