@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import {
@@ -22,7 +22,7 @@ const Game = () => {
 
   const [wordsList, setWordsList] = useState([]);
 
-  const [health, setHealth] = useState(5);
+  const [health, setHealth] = useState(500);
   const [letters, setLetters] = useState(5);
   const [score, setScore] = useState(0);
   const [delay, setDelay] = useState(1000);
@@ -39,11 +39,13 @@ const Game = () => {
       const windowHeight = window.innerHeight;
 
       setElementWidth(width);
-      setElementHeight(windowHeight * (5 / 6) * 0.9 - 300);
+      setElementHeight(windowHeight * (5 / 6) * 0.9 - 50);
 
       console.log("window height:", elementHeight);
     }
   }, []);
+
+  const memoizedWords = useMemo(() => words, [words]);
 
   useEffect(() => {
     if (elementHeight !== null) {
@@ -56,11 +58,9 @@ const Game = () => {
             word,
             positionY: getRandomNumber(),
           }));
-          setWords(wordsPair);
+          setWords((prevWords) => [...prevWords, ...wordsPair]);
           setWordsList((prevWordsList) => [...prevWordsList, ...result]);
         });
-
-      console.log(words);
     }
   }, [letters, elementHeight, game]);
 
@@ -68,12 +68,11 @@ const Game = () => {
     const timer = setTimeout(() => {
       if (currentIndex < words.length) {
         setCurrentIndex(currentIndex + 1);
-      } else if (currentIndex === 10) {
+      } else if (currentIndex % 10 === 0) {
         setLetters(letters + 1);
         if (duration < 5) {
           setDuration(duration - 1);
         }
-        setCurrentIndex(0);
         if (delay > 1000) {
           setDelay(delay - 500);
         }
@@ -90,7 +89,7 @@ const Game = () => {
   };
 
   const getRandomNumber = () => {
-    return Math.floor(Math.random() * (elementHeight + 1));
+    return Math.floor(Math.random() * (elementHeight));
   };
 
   const handleTyping = (e) => {
@@ -101,6 +100,7 @@ const Game = () => {
     if (wordsList.includes(inputText)) {
       const updatedWordsList = wordsList.filter((word) => word !== inputText);
       setWordsList(updatedWordsList);
+
       e.target.value = "";
     }
   };
@@ -146,7 +146,7 @@ const Game = () => {
 
     await updateDoc(leaderboardRef, {
       Score: score,
-      playerName: playerName
+      playerName: playerName,
     });
     e.preventDefault();
   };
@@ -154,6 +154,8 @@ const Game = () => {
   const handleName = (e) => {
     setPlayerName(e.target.value);
   };
+
+  console.log(words)
 
   return (
     <div className="h-full text-white">
@@ -205,34 +207,33 @@ const Game = () => {
             </form>
           </div>
           {game ? (
-            words?.slice(0, currentIndex).map((word, index) => (
-              <motion.div
-                key={index}
-                className=" w-[200px] flex items-center m-0 p-0"
-                animate={
-                  wordsList.includes(word.word)
-                    ? { y: word.positionY, x: elementWidth }
-                    : {
-                        opacity: 0,
-                        y: word.positionY,
-                        x: elementWidth,
-                        transition: 1,
-                      }
-                }
-                initial={{ x: -100 }}
-                transition={{
-                  type: "tween",
-                  duration: duration,
-                  ease: "linear",
-                  y: { duration: 0 },
-                }}
-                onAnimationComplete={
-                  wordsList.includes(word.word) ? handleFail : handleSuccess
-                }
-              >
-                <p className="text-2xl">{word.word}</p>
-              </motion.div>
-            ))
+            memoizedWords?.slice(0, currentIndex).map((word, index) => (
+                <motion.div
+                  key={index}
+                  className=" w-[200px] flex items-center m-0 p-0 absolute"
+                  animate={
+                    wordsList.includes(word.word)
+                      ? { x: elementWidth }
+                      : {
+                          opacity: 0,
+                          x: elementWidth,
+                          transition: 1,
+                        }
+                  }
+                  initial={{ y: word.positionY, x: -100 }}
+                  transition={{
+                    type: "tween",
+                    duration: duration,
+                    ease: "linear",
+                    y: { duration: 0 },
+                  }}
+                  onAnimationComplete={
+                    wordsList.includes(word.word) ? handleFail : handleSuccess
+                  }
+                >
+                  <p className="text-2xl">{word.word}</p>
+                </motion.div>
+              ))
           ) : (
             <div className="w-full p-20 flex flex-col items-center">
               <h1 className="text-center text-6xl">Game Over</h1>
