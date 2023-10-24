@@ -22,11 +22,11 @@ const Game = () => {
 
   const [wordsList, setWordsList] = useState([]);
 
-  const [health, setHealth] = useState(500);
+  const [health, setHealth] = useState(5);
   const [letters, setLetters] = useState(5);
   const [score, setScore] = useState(0);
-  const [delay, setDelay] = useState(1000);
-  const [duration, setDuration] = useState(5);
+  const [delay, setDelay] = useState(5000);
+  const [duration, setDuration] = useState(10);
 
   const [game, setGame] = useState(true);
 
@@ -39,9 +39,7 @@ const Game = () => {
       const windowHeight = window.innerHeight;
 
       setElementWidth(width);
-      setElementHeight(windowHeight * (5 / 6) * 0.9 - 50);
-
-      console.log("window height:", elementHeight);
+      setElementHeight(windowHeight * (5 / 6) * 0.9 - 75);
     }
   }, []);
 
@@ -95,7 +93,6 @@ const Game = () => {
   const handleTyping = (e) => {
     const inputText = e.target.value.toLowerCase().slice(-letters);
     setUserInput(inputText);
-    console.log("input:", inputText);
 
     if (wordsList.includes(inputText)) {
       const updatedWordsList = wordsList.filter((word) => word !== inputText);
@@ -154,8 +151,6 @@ const Game = () => {
   const handleName = (e) => {
     setPlayerName(e.target.value);
   };
-
-  console.log(words)
 
   return (
     <div className="h-full text-white">
