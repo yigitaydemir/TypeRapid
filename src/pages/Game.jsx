@@ -1,14 +1,7 @@
 import { useRef, useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import {
-  arrayRemove,
-  arrayUnion,
-  doc,
-  setDoc,
-  updateDoc,
-  getDoc,
-} from "firebase/firestore";
+import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../utils/Firebase";
 
 const Game = () => {
@@ -87,7 +80,7 @@ const Game = () => {
   };
 
   const getRandomNumber = () => {
-    return Math.floor(Math.random() * (elementHeight));
+    return Math.floor(Math.random() * elementHeight);
   };
 
   const handleTyping = (e) => {
@@ -151,8 +144,8 @@ const Game = () => {
     await updateDoc(leaderboardRef, {
       Leaderboard: arrayUnion({
         playerName: playerName,
-        score: score
-      })
+        score: score,
+      }),
     });
     e.preventDefault();
   };
@@ -212,32 +205,32 @@ const Game = () => {
           </div>
           {game ? (
             memoizedWords?.slice(0, currentIndex).map((word, index) => (
-                <motion.div
-                  key={index}
-                  className=" w-[200px] flex items-center m-0 p-0 absolute"
-                  animate={
-                    wordsList.includes(word.word)
-                      ? { x: elementWidth }
-                      : {
-                          opacity: 0,
-                          x: elementWidth,
-                          transition: 1,
-                        }
-                  }
-                  initial={{ y: word.positionY, x: -100 }}
-                  transition={{
-                    type: "tween",
-                    duration: duration,
-                    ease: "linear",
-                    y: { duration: 0 },
-                  }}
-                  onAnimationComplete={
-                    wordsList.includes(word.word) ? handleFail : handleSuccess
-                  }
-                >
-                  <p className="text-2xl">{word.word}</p>
-                </motion.div>
-              ))
+              <motion.div
+                key={index}
+                className=" w-[200px] flex items-center m-0 p-0 absolute"
+                animate={
+                  wordsList.includes(word.word)
+                    ? { x: elementWidth }
+                    : {
+                        opacity: 0,
+                        x: elementWidth,
+                        transition: 1,
+                      }
+                }
+                initial={{ y: word.positionY, x: -100 }}
+                transition={{
+                  type: "tween",
+                  duration: duration,
+                  ease: "linear",
+                  y: { duration: 0 },
+                }}
+                onAnimationComplete={
+                  wordsList.includes(word.word) ? handleFail : handleSuccess
+                }
+              >
+                <p className="text-2xl">{word.word}</p>
+              </motion.div>
+            ))
           ) : (
             <div className="w-full p-20 flex flex-col items-center">
               <h1 className="text-center text-6xl">Game Over</h1>
@@ -251,12 +244,14 @@ const Game = () => {
                 />
               </form>
 
-              <button
-                className="text-white text-xl bg-red-400 w-44 h-12 rounded-md m-2 tracking-wider"
-                onClick={saveScore}
-              >
-                Save Your Score
-              </button>
+              <Link to="/leaderboard">
+                <button
+                  className="text-white text-xl bg-red-400 w-44 h-12 rounded-md m-2 tracking-wider"
+                  onClick={saveScore}
+                >
+                  Save Your Score
+                </button>
+              </Link>
               <button
                 className="text-white text-3xl bg-red-400 w-44 h-12 rounded-md m-2 tracking-wider"
                 onClick={tryAgain}
