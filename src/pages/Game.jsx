@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../utils/Firebase";
 
@@ -21,7 +22,7 @@ const Game = () => {
   const [delay, setDelay] = useState(5000);
   const [duration, setDuration] = useState(10);
 
-  const [game, setGame] = useState(true);
+  const [game, setGame] = useState(false);
 
   const [userInput, setUserInput] = useState("");
   const [playerName, setPlayerName] = useState("");
@@ -130,16 +131,11 @@ const Game = () => {
     e.preventDefault();
   };
 
+  const navigate = useNavigate();
+
   const saveScore = async (e) => {
     const leaderboardRef = doc(db, "Leaderboard", "Leaderboard");
     setDoc(leaderboardRef, { capital: true }, { merge: true });
-
-    // const docData = {
-    //   Scores: {
-    //     playerName: playerName,
-    //     score: score,
-    //   }
-    // }
 
     await updateDoc(leaderboardRef, {
       Leaderboard: arrayUnion({
@@ -147,6 +143,9 @@ const Game = () => {
         score: score,
       }),
     });
+
+    navigate("/leaderboard");
+
     e.preventDefault();
   };
 
@@ -244,14 +243,13 @@ const Game = () => {
                 />
               </form>
 
-              <Link to="/leaderboard">
-                <button
-                  className="text-white text-xl bg-red-400 w-44 h-12 rounded-md m-2 tracking-wider"
-                  onClick={saveScore}
-                >
-                  Save Your Score
-                </button>
-              </Link>
+              <button
+                className="text-white text-xl bg-red-400 w-44 h-12 rounded-md m-2 tracking-wider"
+                onClick={saveScore}
+              >
+                Save Your Score
+              </button>
+
               <button
                 className="text-white text-3xl bg-red-400 w-44 h-12 rounded-md m-2 tracking-wider"
                 onClick={tryAgain}

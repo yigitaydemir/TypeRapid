@@ -15,8 +15,8 @@ const Leaderboard = () => {
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      setScores(docSnap.data().Leaderboard);
-      console.log(scores);
+      const sortedScores = docSnap.data().Leaderboard.sort((a, b) => b.score - a.score);
+      setScores(sortedScores);
     }
   };
 
