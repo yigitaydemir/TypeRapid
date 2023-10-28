@@ -7,7 +7,7 @@ const Leaderboard = () => {
   const [scores, setScores] = useState();
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [scoresPerPage, setScoresPerPage] = useState(10);
+  const [scoresPerPage, setScoresPerPage] = useState(6);
 
   useEffect(() => {
     getScores();
@@ -84,7 +84,7 @@ const Leaderboard = () => {
         ))}
       </ul>
 
-      <div>
+      <div className="flex flex-wrap w-full items-center justify-center">
         <Link to="/">
           <button className="text-white text-3xl bg-red-400 w-44 h-12 rounded-md m-2 tracking-wider active:scale-95">
             Home
