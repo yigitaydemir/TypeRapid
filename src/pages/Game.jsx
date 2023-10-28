@@ -240,18 +240,19 @@ const Game = () => {
                   onChange={handleName}
                   type="text"
                   className="text-2xl bg-transparent outline-none border-b-white border-b-2"
+                  autoFocus
                 />
               </form>
 
               <button
-                className="text-white text-xl bg-red-400 w-44 h-12 rounded-md m-2 tracking-wider"
+                className="text-white text-xl bg-red-400 w-44 h-12 rounded-md m-2 tracking-wider active:scale-95"
                 onClick={saveScore}
               >
                 Save Your Score
               </button>
 
               <button
-                className="text-white text-3xl bg-red-400 w-44 h-12 rounded-md m-2 tracking-wider"
+                className="text-white text-3xl bg-red-400 w-44 h-12 rounded-md m-2 tracking-wider active:scale-95"
                 onClick={tryAgain}
               >
                 Try Again
@@ -259,7 +260,7 @@ const Game = () => {
 
               <Link to="/leaderboard">
                 {" "}
-                <button className="text-white text-xl font-semibold bg-red-400 w-44 h-12 rounded-md m-2 tracking-wider">
+                <button className="text-white text-xl font-semibold bg-red-400 w-44 h-12 rounded-md m-2 tracking-wider active:scale-95">
                   Leaderboard
                 </button>
               </Link>

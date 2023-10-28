@@ -17,18 +17,18 @@ const Home = () => {
           iusto nesciunt voluptatibus.
         </p>
         <Link to="/play">
-          <button className="text-white text-xl font-semibold bg-red-400 w-44 h-12 rounded-md m-2 tracking-wider">
+          <button className="text-white text-xl font-semibold bg-red-400 w-44 h-12 rounded-md m-2 tracking-wider active:scale-95">
             Play
           </button>
         </Link>
         <Link to="/about">
-          <button className="text-white text-xl font-semibold bg-red-400 w-44 h-12 rounded-md m-2 tracking-wider">
+          <button className="text-white text-xl font-semibold bg-red-400 w-44 h-12 rounded-md m-2 tracking-wider active:scale-95">
             About
           </button>
         </Link>
         <Link to="/leaderboard">
           {" "}
-          <button className="text-white text-xl font-semibold bg-red-400 w-44 h-12 rounded-md m-2 tracking-wider">
+          <button className="text-white text-xl font-semibold bg-red-400 w-44 h-12 rounded-md m-2 tracking-wider active:scale-95">
             Leaderboard
           </button>
         </Link>
