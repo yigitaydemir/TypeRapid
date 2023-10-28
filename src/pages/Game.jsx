@@ -22,7 +22,7 @@ const Game = () => {
   const [delay, setDelay] = useState(5000);
   const [duration, setDuration] = useState(10);
 
-  const [game, setGame] = useState(false);
+  const [game, setGame] = useState(true);
 
   const [userInput, setUserInput] = useState("");
   const [playerName, setPlayerName] = useState("");
@@ -154,7 +154,7 @@ const Game = () => {
   };
 
   return (
-    <div className="h-full text-white">
+    <div className="h-full text-white bg-black bg-opacity-20 rounded-xl">
       {/* Healthbar and Score */}
       <section className="border-b-2 border-white h-[10%] p-2 sm:p-10 text-xl flex items-center justify-between">
         <div className="flex items-center gap-2">

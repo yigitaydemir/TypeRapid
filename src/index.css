@@ -39,6 +39,10 @@ code {
   height: 100vh; 
 }
 
+.about {
+  word-spacing: 6px;
+}
+
 /* Use 'subtract' to make the outside of the mask invisible */
 .mask {
   position: absolute;

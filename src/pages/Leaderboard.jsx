@@ -52,7 +52,7 @@ const Leaderboard = () => {
   };
 
   return (
-    <div className="relative h-full text-white flex flex-col items-center justify-between">
+    <div className="relative h-full text-white flex flex-col items-center justify-between bg-black bg-opacity-60 rounded-xl">
       <h1 className="text-6xl">Leaderboard</h1>
 
       <div className="h-3/5 w-full flex items-start justify-center">
