@@ -48,12 +48,12 @@ const About = () => {
           </button>
         </a>
 
-        <Link to="/about">
+        <a href="https://yigitaydemir.vercel.app/" target="blank">
           {" "}
           <button className="text-white text-3xl bg-red-400 w-44 h-12 rounded-md m-2 tracking-wider active:scale-95">
             Contact Me
           </button>
-        </Link>
+        </a>
       </div>
     </div>
   );
