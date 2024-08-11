@@ -1,18 +1,12 @@
-# Getting Started with Create React App
+# TypeRapid
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Typerapid represents a dynamic speed typing game that challenges players to achieve peak performance by accurately typing words before they elapse from the screen. Adding to the complexity, words gradually increase in size and velocity as players advance through the game, testing and enhancing their typing agility. Furthermore, we encourage you to record your scores, securing your place on the leaderboard, and enabling you to engage in friendly competition with your peers.
 
-## Available Scripts
+## Major Features
 
-In the project directory, you can run:
+### `ReactJS`
 
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+The game is developed with [ReactJS](https://react.dev/), a highly capable and widely adopted JavaScript framework renowned for its robust features and capabilities.
 
 ### `npm test`
 
